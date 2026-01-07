@@ -1,27 +1,11 @@
 "use client"
 
-import { useEffect, useRef } from "react"
-import { createRoot } from "react-dom/client"
-import App from "../src/App"
+import dynamic from "next/dynamic"
 import "../src/index.css"
 
+// Dynamically import the App component to avoid SSR issues with React Router
+const App = dynamic(() => import("../src/App"), { ssr: false })
+
 export default function Page() {
-  const containerRef = useRef(null)
-  const rootRef = useRef(null)
-
-  useEffect(() => {
-    if (containerRef.current && !rootRef.current) {
-      rootRef.current = createRoot(containerRef.current)
-      rootRef.current.render(<App />)
-    }
-
-    return () => {
-      if (rootRef.current) {
-        rootRef.current.unmount()
-        rootRef.current = null
-      }
-    }
-  }, [])
-
-  return <div ref={containerRef} className="min-h-screen" />
+  return <App />
 }
